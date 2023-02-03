@@ -1,0 +1,19 @@
+{
+  "name": "yamap",
+  "version": "1.0.0",
+  "description": "учебный проект на Yandex Map",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Блинов Евгений",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "@fastify/static": "^6.8.0",
+    "fastify": "^4.12.0"
+  }
+}
