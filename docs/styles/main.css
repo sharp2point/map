@@ -1,0 +1,126 @@
+:root {
+  margin: 0;
+  padding: 0;
+  font: 16px, sans-serif;
+  box-sizing: border-box;
+}
+#map {
+  width: 100vw;
+  height: 100vh;
+}
+.dialog {
+  position: absolute;
+  top: 0;
+  left: -10000px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+.dialog-header {
+  width: 90%;
+  height: 2rem;
+  display: flex;
+  flex-direction: row;
+  padding-inline: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.dialog-header h2 {
+  font-family: "Arial";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.1rem;
+  color: black;
+}
+.dialog-close__button {
+  width: 1rem;
+  height: 1rem;
+  border: none;
+  background: url("../assets/close_button.svg");
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all 100ms ease-in;
+}
+.dialog-close__button:hover {
+  transform: scale(1.2);
+}
+.dialog-close__button::before {
+  content: "CLOSE";
+  position: absolute;
+  color: rgb(130, 130, 130);
+  opacity: 0;
+  font-size: 0.6rem;
+  transition: transform 70ms ease-out;
+}
+.dialog-close__button:hover::before {
+  transform: translateX(-43px) translateY(-5px);
+  opacity: 1;
+}
+
+.dialog::before {
+  content: "";
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid white;
+  background: white;
+  transform-origin: center;
+  transform: translateY(160px) translateX(-130px) rotate(45deg);
+}
+.dialog-form {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.dialog-form .input-text {
+  font-size: 0.9rem;
+  line-height: 2rem;
+  width: 310px;
+  background: #ffffff;
+  border: 1px solid rgba(207, 207, 207, 1);
+  border-radius: 3px;
+  margin-top: 10px;
+}
+.dialog-form .input-text:hover {
+  border: 1px solid rgba(19, 113, 200, 1);
+}
+.dialog-form .input-text::placeholder {
+  color: rgb(100, 100, 100);
+}
+.dialog-text__feed {
+  height: 6rem;
+}
+
+.dialog-submit {
+  margin-top: 19px;
+  margin-bottom: 0.5rem;
+  width: 30%;
+  height: 38px;
+  border: none;
+  background: #ff8663;
+  color: white;
+  border-radius: 3px;
+  font-size: 1rem;
+  line-height: 2rem;
+  cursor: pointer;
+  transition: all 100ms ease-in;
+}
+.dialog-submit:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0.5rem rgb(208, 208, 208);
+}
+.hide{
+  visibility: hidden;
+}
