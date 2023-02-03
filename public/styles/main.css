@@ -9,9 +9,6 @@
   height: 100vh;
 }
 .dialog {
-  position: absolute;
-  top: 0;
-  left: -10000px;
   width: 350px;
   display: flex;
   flex-direction: column;
@@ -39,15 +36,6 @@
   font-size: 1rem;
   line-height: 1.1rem;
   color: black;
-}
-.dialog-close__button {
-  width: 1rem;
-  height: 1rem;
-  border: none;
-  background: url("../assets/close_button.svg");
-  cursor: pointer;
-  align-self: flex-start;
-  transition: all 100ms ease-in;
 }
 .dialog-close__button:hover {
   transform: scale(1.2);
@@ -118,9 +106,6 @@
   transition: all 100ms ease-in;
 }
 .dialog-submit:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
   box-shadow: 0 0 0.5rem rgb(208, 208, 208);
-}
-.hide{
-  visibility: hidden;
 }
