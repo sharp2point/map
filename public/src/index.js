@@ -13,12 +13,17 @@ export const appendPlacemark = (ymaps, position) => {
   //   //   });
 
   placemark.events.add("click", (e) => {
-    console.log(placemark.geometry._coordinates);
-    const result = JSON.parse(
-      DB.read(placemark.geometry._coordinates.join(";")).key
-    );
-
-    console.log("RESULT:", result);
+    console.log(DB.read(placemark.geometry._coordinates));
   });
   return placemark;
+};
+
+export const restorePlacemark = (ymaps, map) => {
+  const restoreData = DB.readAll();
+  if (restoreData && restoreData.length) {
+    restoreData.forEach((item) => {
+      const mark = appendPlacemark(ymaps, item.coords);
+      map.geoObjects.add(mark);
+    });
+  }
 };

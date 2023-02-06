@@ -16,19 +16,23 @@
   <body>
     <div id="map"></div>
     <script type="module">
-      import { appendPlacemark } from "./public/src/index.js";
+      import { appendPlacemark, restorePlacemark } from "./public/src/index.js";
+      import DB from "./public/src/storage.js";
 
       ymaps.ready(() => {
         const map = new ymaps.Map("map", {
           center: [55.76, 37.64],
           zoom: 10,
         });
+
         map.events.add("click", (e) => {
+          console.log("YMAP");
           const mark = appendPlacemark(ymaps, e.get("coords"));
-          console.log("Map click");
           map.geoObjects.add(mark);
           mark.balloon.open();
         });
+
+        restorePlacemark(ymaps, map); // взять все placemarker из хранилища
       });
     </script>
   </body>

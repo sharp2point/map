@@ -27,21 +27,12 @@ export const balloonTemplateLayout = (ymaps) => {
         const name = $(".dialog-text__name");
         const place = name.next();
         const feed = place.next();
-        console.log(
-          "Result: ",
-          name[0].value,
-          place[0].value,
-          feed[0].value,
-          coords
-        );
+        
         DB.create({
-          key: coords.join(";"),
-          data: {
-            name: name[0].value,
-            place: place[0].value,
-            feed: feed[0].value,
-            coords: coords,
-          },
+          name: name[0].value,
+          place: place[0].value,
+          feed: feed[0].value,
+          coords: coords,
         });
         balloon.close();
       },
