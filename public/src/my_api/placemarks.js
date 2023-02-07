@@ -8,10 +8,10 @@ export const newPlacemark = (ymaps, position, data, balloonTemplate) => {
       /*-props-*/
       feedData: data,
       balloonContentHeader: "Plaxce",
+      clusterCaption: "Colik",
     },
     {
       hintContent: "Заголовок метки №",
-
       balloonContentLayout: balloonTemplate,
     }
   );
@@ -26,11 +26,12 @@ export const appendPlacemark = (ymaps, position, data = {}) => {
   );
 
   placemark.events.add("click", (e) => {
-    console.log("PM CLICK");
-    const mark = e.get("target");
-    const feedData = DB.read(mark.geometry.getCoordinates());
-    mark.properties.set("balloonContentHeader", "Place");
-    mark.properties.set("feedData", feedData);
+    if (e.get("target").options._name === "geoObject") {
+      const mark = e.get("target");
+      const feedData = DB.read(mark.geometry.getCoordinates());
+      mark.properties.set("balloonContentHeader", "Place");
+      mark.properties.set("feedData", feedData);
+    }
   });
   return placemark;
 };
