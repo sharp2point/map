@@ -18,10 +18,15 @@ export const newPlacemark = (ymaps, position, data, balloonTemplate) => {
 };
 
 export const appendPlacemark = (ymaps, position, data = {}) => {
-  const balloonTemplate = balloonPlacemarkTemplateLayout(ymaps);
-  const placemark = newPlacemark(ymaps, position, data, balloonTemplate);
+  const placemark = newPlacemark(
+    ymaps,
+    position,
+    data,
+    balloonPlacemarkTemplateLayout(ymaps)
+  );
 
   placemark.events.add("click", (e) => {
+    console.log("PM CLICK");
     const mark = e.get("target");
     const feedData = DB.read(mark.geometry.getCoordinates());
     mark.properties.set("balloonContentHeader", "Place");
@@ -39,4 +44,3 @@ export const restorePlacemark = (ymaps, clusterer) => {
     });
   }
 };
-

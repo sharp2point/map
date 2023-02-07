@@ -11,8 +11,8 @@ export const newCluster = (ymaps, balloonTemplate) => {
 };
 
 export const appendCluster = (ymaps) => {
-  const balloon = balloonClusterTemplateLayout(ymaps);
-  const cluster = newCluster(ymaps, balloon);
+  const cluster = newCluster(ymaps, balloonClusterTemplateLayout(ymaps));
+
   cluster.events.add("click", (e) => {
     // console.log("Cluster", e.get("target"));
     // console.log("Cluster obj", e.get("target").properties);

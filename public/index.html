@@ -16,12 +16,7 @@
   <body>
     <div id="map"></div>
     <script type="module">
-      import {
-        appendPlacemark,
-        restorePlacemark,
-      } from "./public/src/placemarks.js";
-      import { appendCluster } from "./public/src/clusters.js";
-      import DB from "./public/src/storage.js";
+      import * as MyAPI from "./public/src/my_api/index.js";
 
       ymaps.ready(() => {
         const map = new ymaps.Map("map", {
@@ -30,16 +25,16 @@
           controls: [],
         });
 
-        const clusterer = appendCluster(ymaps);
-        map.geoObjects.add(clusterer);
+        const cluster = MyAPI.appendCluster(ymaps);
+        map.geoObjects.add(cluster);
 
         map.events.add("click", (e) => {
-          const mark = appendPlacemark(ymaps, e.get("coords"));
-          clusterer.add(mark);
+          const mark = MyAPI.appendPlacemark(ymaps, e.get("coords"));
+          cluster.add(mark);
           mark.balloon.open();
         });
 
-        restorePlacemark(ymaps, clusterer); // взять все placemarker из хранилища
+        MyAPI.restorePlacemark(ymaps, cluster); // взять все placemarker из хранилища
       });
     </script>
   </body>
