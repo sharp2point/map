@@ -25,16 +25,18 @@
           controls: [],
         });
 
-        const cluster = MyAPI.appendCluster(ymaps);
-        map.geoObjects.add(cluster);
+        // const cluster = MyAPI.appendCluster(ymaps);
+        // map.geoObjects.add(cluster);
 
         map.events.add("click", (e) => {
+          console.log("MAP CLICK");
           const mark = MyAPI.appendPlacemark(ymaps, e.get("coords"));
-          cluster.add(mark);
+          map.geoObjects.add(mark);
+          //cluster.add(mark);
           mark.balloon.open();
         });
 
-        MyAPI.restorePlacemark(ymaps, cluster); // взять все placemarker из хранилища
+        //MyAPI.restorePlacemark(ymaps, cluster); // взять все placemarker из хранилища
       });
     </script>
   </body>
