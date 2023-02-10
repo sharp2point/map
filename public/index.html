@@ -17,26 +17,28 @@
     <div id="map"></div>
     <script type="module">
       import * as MyAPI from "./public/src/my_api/index.js";
-
+      let map;
       ymaps.ready(() => {
-        const map = new ymaps.Map("map", {
+        map = new ymaps.Map("map", {
           center: [55.76, 37.64],
           zoom: 10,
           controls: [],
         });
+        let balloon = map.balloon;
 
-        // const cluster = MyAPI.appendCluster(ymaps);
-        // map.geoObjects.add(cluster);
-
-        map.events.add("click", (e) => {
-          console.log("MAP CLICK");
-          const mark = MyAPI.appendPlacemark(ymaps, e.get("coords"));
-          map.geoObjects.add(mark);
-          //cluster.add(mark);
-          mark.balloon.open();
+        map.events.add("click", async (e) => {
+          const coords = e.get("coords");
+          await balloon.open(coords, {
+            contentBody: MyAPI.balloonTemplate,
+          });
+          const sendButton = document.querySelector(".dialog-submit");
+          sendButton.addEventListener("click", (i) => {
+            MyAPI.getFeedback(coords);
+            balloon.close();
+          });
         });
 
-        //MyAPI.restorePlacemark(ymaps, cluster); // взять все placemarker из хранилища
+        // MyAPI.restorePlacemark(ymaps, cluster); // взять все placemarker из хранилища
       });
     </script>
   </body>
