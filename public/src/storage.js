@@ -38,22 +38,33 @@ class Storage {
       return new Error("LocalStorage error");
     }
   };
-
   create = (data) => {
     let storage = JSON.parse(localStorage.getItem(GLOBALKEY));
-    storage.push(data);
+    storage.push({
+      name: data.name,
+      place: data.place,
+      feed: data.feed,
+      key: data.key,
+    });
     localStorage.setItem(GLOBALKEY, JSON.stringify(storage));
   };
-  read = (key) => {
-    let storage = JSON.parse(localStorage.getItem(GLOBALKEY));
 
-    return storage.filter((item) => {
-      return item.coords.join(";") === key.join(";");
-    });
+  selectByKey = (key) => {
+    return this.selectAll().get(key);
   };
-  readAll = () => {
-    return JSON.parse(localStorage.getItem(GLOBALKEY));
+
+  selectAll = () => {
+    let storage = JSON.parse(localStorage.getItem(GLOBALKEY));
+    let sortedStorage = new Map();
+
+    for (const feed of storage) {
+      if (sortedStorage.get(feed.key)) {
+        sortedStorage.get(feed.key).push(feed);
+      } else {
+        sortedStorage.set(feed.key, [feed]);
+      }
+    }
+
+    return sortedStorage;
   };
 }
-
-export default new Storage();

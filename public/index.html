@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="public/styles/main.css" />
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
     <script
-      src="https://yandex.st/jquery/2.2.3/jquery.min.js"
+      src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
       type="text/javascript"
     ></script>
 
@@ -15,31 +15,88 @@
   </head>
   <body>
     <div id="map"></div>
-    <script type="module">
-      import * as MyAPI from "./public/src/my_api/index.js";
-      let map;
-      ymaps.ready(() => {
+    <script src="public/src/storage.js" type="text/javascript"></script>
+    <script src="public/src/template.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      const DB = new Storage();
+      let map, coords, balloon, cluster;
+
+      ymaps.ready(init);
+
+      function init() {
         map = new ymaps.Map("map", {
-          center: [55.76, 37.64],
-          zoom: 10,
+          center: [55.349, 43.892],
+          zoom: 14,
           controls: [],
         });
-        let balloon = map.balloon;
+        balloon = map.balloon;
 
-        map.events.add("click", async (e) => {
-          const coords = e.get("coords");
-          await balloon.open(coords, {
-            contentBody: MyAPI.balloonTemplate,
-          });
-          const sendButton = document.querySelector(".dialog-submit");
-          sendButton.addEventListener("click", (i) => {
-            MyAPI.getFeedback(coords);
-            balloon.close();
-          });
+        const Placemarks = [];
+
+        let marks = DB.selectAll();
+
+        marks.forEach((feeds, key, map) => {
+          const tmp = feeds.map((feed) => feed);
+          Placemarks.push(
+            new ymaps.Placemark(key.split(":"), {
+              balloonContent: feedsTemplate(tmp, template),
+            })
+          );
         });
 
-        // MyAPI.restorePlacemark(ymaps, cluster); // взять все placemarker из хранилища
-      });
+        cluster = new ymaps.Clusterer({
+          clusterDisableClickZoom: true,
+          openBalloonOnClick: false,
+        });
+
+        cluster.add(Placemarks);
+        cluster.events.add("click", async function (e) {
+          coords = e.get("coords");
+          await balloon.open(coords, {
+            contentBody: getFeeds(e.get("target")),
+          });
+        });
+        map.geoObjects.add(cluster);
+
+        map.events.add("click", async function (e) {
+          coords = e.get("coords");
+          await balloon.open(coords, {
+            contentBody: template,
+          });
+        });
+      }
+
+      function sendForm() {
+        const data = new FormData(document.forms[0]);
+        DB.create({
+          name: data.get("name"),
+          place: data.get("place"),
+          feed: data.get("feed"),
+          key: coords.join(":"),
+        });
+        cluster.add(new ymaps.Placemark(coords));
+        balloon.close();
+      }
+
+      function getFeeds(obj) {
+        let feeds = [];
+
+        obj.options._name === "cluster"
+          ? obj.getGeoObjects().forEach((mark) => {
+              DB.selectByKey(mark.geometry.getCoordinates().join(":")).forEach(
+                (feed) => {
+                  feeds.push({
+                    name: feed.name,
+                    place: feed.place,
+                    feed: feed.place,
+                  });
+                }
+              );
+            })
+          : feeds.push(DB.selectByKey(obj.geometry.getCoordinates().join(":")));
+
+        return feedsTemplate(feeds, template);
+      }
     </script>
   </body>
 </html>
