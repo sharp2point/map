@@ -6,10 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles/main.css" />
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
-      type="text/javascript"
-    ></script>
 
     <title>YaMaps</title>
   </head>
@@ -17,6 +13,7 @@
     <div id="map"></div>
     <script src="src/storage.js" type="text/javascript"></script>
     <script src="src/template.js" type="text/javascript"></script>
+    <script src="src/utils.js" type="text/javascript"></script>
     <script type="text/javascript">
       const DB = new Storage();
       let map, coords, balloon, cluster;
@@ -25,8 +22,8 @@
 
       function init() {
         map = new ymaps.Map("map", {
-          center: [55.349, 43.892],
-          zoom: 14,
+          center: [56.3, 44.0],
+          zoom: 10,
           controls: [],
         });
         balloon = map.balloon;
@@ -39,7 +36,7 @@
           const tmp = feeds.map((feed) => feed);
           Placemarks.push(
             new ymaps.Placemark(key.split(":"), {
-              balloonContent: feedsTemplate(tmp, template),
+              balloonContent: balloonTemplateConstructor(tmp),
             })
           );
         });
@@ -61,19 +58,13 @@
         map.events.add("click", async function (e) {
           coords = e.get("coords");
           await balloon.open(coords, {
-            contentBody: template,
+            contentBody: balloonTemplateConstructor(null),
           });
         });
       }
 
-      function sendForm() {
-        const data = new FormData(document.forms[0]);
-        DB.create({
-          name: data.get("name"),
-          place: data.get("place"),
-          feed: data.get("feed"),
-          key: coords.join(":"),
-        });
+      function formSendHandler() {
+        DB.create(formToFeed(document.forms[0]));
         cluster.add(new ymaps.Placemark(coords));
         balloon.close();
       }
@@ -83,19 +74,11 @@
 
         obj.options._name === "cluster"
           ? obj.getGeoObjects().forEach((mark) => {
-              DB.selectByKey(mark.geometry.getCoordinates().join(":")).forEach(
-                (feed) => {
-                  feeds.push({
-                    name: feed.name,
-                    place: feed.place,
-                    feed: feed.place,
-                  });
-                }
-              );
+              feelFeeds(mark, feeds);
             })
-          : feeds.push(DB.selectByKey(obj.geometry.getCoordinates().join(":")));
+          : feelFeeds(obj, feeds);
 
-        return feedsTemplate(feeds, template);
+        return balloonTemplateConstructor(feeds);
       }
     </script>
   </body>

@@ -1,27 +1,4 @@
-/*
-  '0;0':[
-    {
-      name: 'frank',
-      place: 'Pizza',
-      feed: 'Ok, pizza !',
-      coords: [0,0]
-    }
-  ],
-  '1;2':[
-    {
-      name: 'john',
-      place: 'barbershop',
-      feed: 'good shop !',
-      coords: [1,2]
-    },
-    {
-      name: 'albert',
-      place: 'barbershop',
-      feed: 'bad shop!',
-      coords: [1,2]
-    }
-  ]
-*/
+
 const GLOBALKEY = "MyPlaceMarkStorage";
 
 class Storage {
@@ -58,11 +35,9 @@ class Storage {
     let sortedStorage = new Map();
 
     for (const feed of storage) {
-      if (sortedStorage.get(feed.key)) {
-        sortedStorage.get(feed.key).push(feed);
-      } else {
-        sortedStorage.set(feed.key, [feed]);
-      }
+      sortedStorage.get(feed.key)
+        ? sortedStorage.get(feed.key).push(feed)
+        : sortedStorage.set(feed.key, [feed]);
     }
 
     return sortedStorage;
